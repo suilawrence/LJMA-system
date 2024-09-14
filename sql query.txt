@@ -1,0 +1,20 @@
+CREATE TABLE sf9_es (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    lrn VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    middle_name VARCHAR(255),
+    name_extension VARCHAR(50),
+    sex VARCHAR(10) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    age_end_of_school_year INT NOT NULL,
+    class_adviser_name VARCHAR(255) NOT NULL,
+    class_adviser_signature VARCHAR(255), -- Consider storing image or signature data
+    school_head_name VARCHAR(255) NOT NULL,
+    school_head_signature VARCHAR(255),
+    class_adviser_signed_date DATE,
+    school_head_signed_date DATE
+);
+
+
+
