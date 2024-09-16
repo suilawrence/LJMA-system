@@ -5,6 +5,75 @@ if (isset($_GET['error'])) {
 } elseif (isset($_GET['success'])) {
   $success = urldecode($_GET['success']); // Decode the success message
 }
+// Get the student ID from the URL parameter
+if (isset($_GET['id'])) {
+  $studentId = $_GET['id'];
+
+  // Assuming you have the database connection established in a separate file (e.g., connect.php)
+  require_once 'connection/connect.php';
+
+  // Fetch student data from the database
+  $sql = "SELECT *
+          FROM studentinfo 
+          WHERE id = $studentId";
+  $result = mysqli_query($conn, $sql);
+
+  // Check if the query was successful and there are results
+  if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc(result: $result);
+    $academic_year_from = $row['academic_year_from'];
+    $academic_year_to = $row['academic_year_to'];
+    $psaBirthCertNo = $row['psa_birth_cert_no'];
+    $studentType = $row['student_type'];
+    $lrn = $row['lrn'];
+    $last_name = $row['last_name'];
+    $first_name = $row['first_name'];
+    $middle_name = $row['middle_name'];
+    $extension_name = $row['extension_name'];
+    $birthdate = $row['birthdate'];
+
+    
+    $sex = $row['sex'];
+    $age = $row['age'];
+    $indigenous_people = $row['indigenous_people'];
+    $indigenous_community = $row['indigenous_community'];
+    $mother_tongue = $row['mother_tongue'];
+    $address = $row['address'];
+    $cellphone_no = $row['cellphone_no'];
+    $father_last_name = $row['father_last_name'];
+    $father_first_name = $row['father_first_name'];
+    $father_middle_name = $row['father_middle_name'];
+
+    $mother_last_name = $row['mother_last_name'];
+    $mother_first_name = $row['mother_first_name'];
+    $mother_middle_name = $row['mother_middle_name'];
+
+    $guardian_last_name = $row['guardian_last_name'];
+    $guardian_first_name = $row['guardian_first_name'];
+    $guardian_middle_name = $row['guardian_middle_name'];
+
+    $last_grade_level_completed = $row['last_grade_level_completed'];
+    $last_school_year_completed = $row['last_school_year_completed'];
+    $previous_school_name = $row['previous_school_name'];
+    $previous_school_id = $row['previous_school_id'];
+    $previous_school_address = $row['previous_school_address'];
+    $previous_school_contact_person = $row['previous_school_contact_person'];
+    $parent_guardian_esignature = $row['parent_guardian_esignature'];
+    $username = $row['username'];
+    $grade_level = $row['grade_level'];
+  } else {
+    // Handle the case where the student record is not found
+    echo "Student record not found.";
+    exit; // Or redirect to an error page
+  }
+
+  // Close the database connection
+  mysqli_close($conn);
+} else {
+  // Handle the case where the 'id' parameter is missing
+  echo "Student ID not provided.";
+  exit; // Or redirect to an error page
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,19 +124,19 @@ if (isset($_GET['error'])) {
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Add Students</h1>
+      <h1>Students Information</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="index.html">Home</a></li>
           <li class="breadcrumb-item">Manage Student</li>
-          <li class="breadcrumb-item active">Add Students</li>
+          <li class="breadcrumb-item active">View Student</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
 
     <section class="section">
       <div class="row">
-
+        
 
 
 
@@ -115,15 +184,15 @@ if (isset($_GET['error'])) {
               <form class="row g-3 needs-validation" action="connection/process_studentregister.php" method="post" novalidate>
 
 
-              <div class="col-md-12">
+                <!-- <div class="col-md-12">
                   <label for="validationCustom04" class="form-label">Grade Level to Enroll</label>
                   <select class="form-select" name="grade_level" id="validationCustom04" required>
                     <option selected disabled value="">Choose grade to be enroll...</option>
-                    <?php
+                    <php
                     // Assuming you have the database connection established in a separate file (e.g., connect.php)
                     require_once 'connection/connect.php';
 
-                    
+
                     $sql = "SELECT program_level FROM programlevel";
                     $result = mysqli_query($conn, $sql);
 
@@ -144,26 +213,27 @@ if (isset($_GET['error'])) {
                   <div class="invalid-feedback">
                     Please select a valid Grade Level.
                   </div>
-                </div>
+                </div> -->
 
 
 
                 <div class="col-md-6">
-                  <p>Academic Year: <input type="number" name="yearfrom" class="form-control" size="4" required> to <input type="number" class="form-control" name="yearto" size="4" required>
+                  <p>Academic Year: <input type="number" name="yearfrom" class="form-control" size="4" value="<?php echo $academic_year_from; ?>" required> to <input type="number" class="form-control" name="yearto" size="4" value="<?php echo $academic_year_to; ?>" required>
                   </p>
                 </div>
                 <div class="col-md-6">
                   <div class="checkbox-group">
-                    <label><input type="radio" name="LRNtype" value="noLRN" id="noLRN" checked> No LRN</label>
-                    <label><input type="radio" name="LRNtype" value="wLRN" id="wLRN"> With LRN</label>
-                    <label><input type="radio" name="LRNtype" value="returning" id="balik"> Returning (Balik-Aral)</label>
+                    <label><input type="radio" name="LRNtype" value="noLRN" id="noLRN" <?php if ($studentType == 'noLRN') echo 'checked'; ?>> No LRN</label>
+                    <label><input type="radio" name="LRNtype" value="wLRN" id="wLRN" <?php if ($studentType == 'wLRN') echo 'checked'; ?>> With LRN</label>
+                    <label><input type="radio" name="LRNtype" value="returning" id="balik" <?php if ($studentType == 'returning') echo 'checked'; ?>> Returning (Balik-Aral)</label>
                   </div>
                 </div>
 
 
+
                 <div class="col-md-12">
                   <label for="validationCustom05" class="form-label">PSA Birth Certificate NO.</label>
-                  <input type="text" class="form-control" name="PSA" id="validationCustom05" required>
+                  <input type="text" class="form-control" name="PSA" id="validationCustom05" value="<?php echo $psaBirthCertNo; ?>" required>
                   <div class="invalid-feedback">
                     Please provide a valid PSA Birth Certificate NO..
                   </div>
@@ -171,7 +241,7 @@ if (isset($_GET['error'])) {
 
                 <div class="col-md-12">
                   <label for="withLRNinput" class="form-label">Learner Reference No. (LRN)</label>
-                  <input type="tel" maxlength="11" minlength="11" name="lrninput" class="form-control" id="withLRNinput">
+                  <input type="tel" maxlength="11" minlength="11" name="lrninput" class="form-control" id="withLRNinput" value="<?php echo $lrn; ?>">
                   <div class="invalid-feedback">
                     Please provide a valid Learner Reference No. (LRN).
                   </div>
@@ -181,7 +251,7 @@ if (isset($_GET['error'])) {
 
                 <div class="col-md-3">
                   <label for="validationCustom02" class="form-label">Last name</label>
-                  <input type="text" class="form-control" name="lastName" id="validationCustom02" required>
+                  <input type="text" class="form-control" name="lastName" id="validationCustom02" value="<?php echo $last_name; ?>" required>
                   <!-- <div class="valid-feedback">
                     Looks good!
                   </div> -->
@@ -192,7 +262,7 @@ if (isset($_GET['error'])) {
                 </div>
                 <div class="col-md-3">
                   <label for="validationCustom01" class="form-label">First name</label>
-                  <input type="text" class="form-control" id="validationCustom01" name="firstName" required>
+                  <input type="text" class="form-control" id="validationCustom01" name="firstName" value="<?php echo $first_name; ?>" required>
                   <div class="invalid-feedback">
                     Please choose a First name.
                   </div>
@@ -201,7 +271,7 @@ if (isset($_GET['error'])) {
                 <div class="col-md-3">
                   <label for="validationCustomUsername" class="form-label">Middle name</label>
                   <div class="input-group has-validation">
-                    <input type="text" class="form-control" name="middleName" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+                    <input type="text" class="form-control" name="middleName" id="validationCustomUsername" value="<?php echo $middle_name; ?>" aria-describedby="inputGroupPrepend" required>
                     <div class="invalid-feedback">
                       Please choose a username.
                     </div>
@@ -210,7 +280,7 @@ if (isset($_GET['error'])) {
                 <div class="col-md-3">
                   <label for="validationCustomUsername" class="form-label">Extenstion name</label>
                   <div class="input-group has-validation">
-                    <input type="text" class="form-control" id="validationCustomUsername" name="exName" aria-describedby="inputGroupPrepend" placeholder="eg. Jr., III (If Applicable)">
+                    <input type="text" class="form-control" id="validationCustomUsername" name="exName" value="<?php echo $extension_name; ?>" aria-describedby="inputGroupPrepend" placeholder="eg. Jr., III (If Applicable)">
                     <div class="invalid-feedback">
                       Please choose a username.
                     </div>
@@ -218,7 +288,7 @@ if (isset($_GET['error'])) {
                 </div>
                 <div class="col-md-6">
                   <label for="validationCustom03" class="form-label">Date of Birth</label>
-                  <input type="date" class="form-control" id="validationCustom03" name="birthday" required>
+                  <input type="date" class="form-control" id="validationCustom03" name="birthday" value="<?php echo $birthdate; ?>" required>
                   <div class="invalid-feedback">
                     Please provide a valid Birthdate.
                   </div>
@@ -226,17 +296,17 @@ if (isset($_GET['error'])) {
                 <div class="col-md-3">
                   <label for="validationCustom04" class="form-label">Sex</label>
                   <select class="form-select" name="sex" id="validationCustom04" required>
-                    <option selected disabled value="">Choose...</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male" <?php if ($sex == 'Male') echo 'selected'; ?>>Male</option>
+                    <option value="Female" <?php if ($sex == 'Female') echo 'selected'; ?>>Female</option>
                   </select>
+
                   <div class="invalid-feedback">
                     Please select a valid Sex.
                   </div>
                 </div>
                 <div class="col-md-3">
                   <label for="validationCustom05" class="form-label">Age</label>
-                  <input type="number" class="form-control" name="age" id="validationCustom05" required>
+                  <input type="number" class="form-control" name="age" id="validationCustom05" value="<?php echo $age; ?>" required>
                   <div class="invalid-feedback">
                     Please provide a valid Age.
                   </div>
@@ -244,7 +314,7 @@ if (isset($_GET['error'])) {
                 <div class="col-md-12">
                   <label for="validationCustom05" class="form-label">Belonging to any indigenous People (IP) Community/ Indigenous cultural communty?</label>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="indiPeople" id="gridRadios1" value="Yes">
+                    <input class="form-check-input" type="radio" name="indiPeople" id="gridRadios1" <?php if ($indigenous_people == 'Yes') echo 'checked'; ?> value="Yes">
                     <label class="form-check-label" for="gridRadios1">
                       Yes
                     </label>
@@ -254,7 +324,7 @@ if (isset($_GET['error'])) {
                   </div>
 
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="indiPeople" id="noIndigenous" value="No">
+                    <input class="form-check-input" type="radio" name="indiPeople" id="noIndigenous" <?php if ($indigenous_people == 'No') echo 'checked'; ?> value="No">
                     <label class="form-check-label" for="noIndigenous">
                       No
                     </label>
@@ -265,7 +335,7 @@ if (isset($_GET['error'])) {
 
                 <div class="col-md-12">
                   <label for="validationCustom05" class="form-label">Mother Tonge</label>
-                  <input type="text" class="form-control" name="motherTonge" id="validationCustom05" required>
+                  <input type="text" class="form-control" name="motherTonge" id="validationCustom05" value="<?php echo $mother_tongue; ?>" required>
                   <div class="invalid-feedback">
                     Please provide a valid Mother Tonge.
                   </div>
@@ -275,7 +345,7 @@ if (isset($_GET['error'])) {
 
                 <div class="col-md-12">
                   <label for="validationCustom03" class="form-label">Home Number and Street</label>
-                  <input type="text" class="form-control" name="address" id="validationCustom03" required>
+                  <input type="text" class="form-control" name="address" id="validationCustom03" value="<?php echo $address; ?>" required>
                   <div class="invalid-feedback">
                     Please provide a valid Address.
                   </div>
@@ -284,7 +354,7 @@ if (isset($_GET['error'])) {
 
                 <div class="col-md-12">
                   <label for="validationCustom03" class="form-label">Cellphone No</label>
-                  <input type="tel" maxlength="11" minlength="11" name="celphone" class="form-control" id="validationCustom03" placeholder="eg. 0912345678" required>
+                  <input type="tel" maxlength="11" minlength="11" name="celphone" class="form-control" id="validationCustom03" placeholder="eg. 0912345678" value="<?php echo $cellphone_no; ?>"  required>
                   <div class="invalid-feedback">
                     Please provide a valid Cellphone No.
                   </div>
@@ -300,7 +370,7 @@ if (isset($_GET['error'])) {
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="validationCustom03" name="fatherLast" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="validationCustom03" name="fatherLast" placeholder="Your Name"  value="<?php echo $father_last_name; ?>"required>
                       <label for="validationCustom03">Last Name</label>
                     </div>
 
@@ -310,13 +380,13 @@ if (isset($_GET['error'])) {
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="fatherFirst" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="fatherFirst" placeholder="Your Name" value="<?php echo $father_first_name; ?>" required>
                       <label for="floatingName">First Name</label>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="fatherMiddle" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="fatherMiddle" placeholder="Your Name" value="<?php echo $father_middle_name; ?>" required>
                       <label for="floatingName"> Complete Middle Name</label>
                     </div>
                   </div>
@@ -325,11 +395,11 @@ if (isset($_GET['error'])) {
                   <div class="col-md-12">
                     <br>
 
-                    <label for="validationCustom03" class="form-label">Mothers's Name</label>
+                    <label for="validationCustom03" class="form-label">Mother's Name</label>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="validationCustom03" name="motherLast" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="validationCustom03" name="motherLast"  value="<?php echo $mother_last_name; ?>"placeholder="Your Name" required>
                       <label for="validationCustom03">Last Name</label>
                     </div>
 
@@ -339,13 +409,13 @@ if (isset($_GET['error'])) {
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="motherFirst" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="motherFirst" value="<?php echo $mother_first_name; ?>" placeholder="Your Name" required>
                       <label for="floatingName">First Name</label>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="motherMiddle" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="motherMiddle" value="<?php echo $mother_middle_name; ?>" placeholder="Your Name" required>
                       <label for="floatingName"> Complete Middle Name</label>
                     </div>
                   </div>
@@ -359,7 +429,7 @@ if (isset($_GET['error'])) {
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="validationCustom03" name="guardianLast" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="validationCustom03" name="guardianLast" value="<?php echo $guardian_last_name; ?>" placeholder="Your Name" required>
                       <label for="validationCustom03">Last Name</label>
                     </div>
 
@@ -369,13 +439,13 @@ if (isset($_GET['error'])) {
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="guardianFirst" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="guardianFirst" placeholder="Your Name" value="<?php echo $guardian_first_name; ?>" required>
                       <label for="floatingName">First Name</label>
                     </div>
                   </div>
                   <div class="col-md-4">
                     <div class="form-floating">
-                      <input type="text" class="form-control" id="floatingName" name="guardianMiddle" placeholder="Your Name" required>
+                      <input type="text" class="form-control" id="floatingName" name="guardianMiddle" value="<?php echo $guardian_middle_name; ?>" placeholder="Your Name" required>
                       <label for="floatingName"> Complete Middle Name</label>
                     </div>
                   </div>
@@ -392,12 +462,12 @@ if (isset($_GET['error'])) {
                     <div class="col-md-12" style="display: flex; justify-content: space-between;">
                       <div class="col-md-6">
                         <label for="LgradeLevel" class="form-label">Last Grade Level completed</label>
-                        <input type="text" class="form-control" name="lastGradeLevel" id="LgradeLevel">
+                        <input type="text" class="form-control" name="lastGradeLevel" value="<?php echo $last_grade_level_completed; ?>" id="LgradeLevel">
                         <div class="invalid-feedback">Please provide a valid Last Grade Level Completed.</div>
                       </div>
                       <div class="col-md-5">
                         <label for="LschoolYear" class="form-label">Last School Year Completed</label>
-                        <input type="text" class="form-control" name="lastSchoolYear" id="LschoolYear">
+                        <input type="text" class="form-control" name="lastSchoolYear"  value="<?php echo $last_school_year_completed; ?>"id="LschoolYear">
                         <div class="invalid-feedback">Please provide a valid Last School Year Completed.</div>
                       </div>
                     </div>
@@ -405,25 +475,25 @@ if (isset($_GET['error'])) {
                     <div class="col-md-12" style="display: flex; justify-content: space-between;">
                       <div class="col-md-6">
                         <label for="schoolName" class="form-label">School Name</label>
-                        <input type="text" class="form-control" name="schoolName" id="schoolName">
+                        <input type="text" class="form-control" name="schoolName" value="<?php echo $previous_school_name; ?>" id="schoolName">
                         <div class="invalid-feedback">Please provide a valid School Name.</div>
                       </div>
                       <div class="col-md-5">
                         <label for="schoolID" class="form-label">School ID No.</label>
-                        <input type="text" class="form-control" name="schoolID" id="schoolID">
+                        <input type="text" class="form-control" name="schoolID" value="<?php echo $previous_school_id; ?>" id="schoolID">
                         <div class="invalid-feedback">Please provide a valid School ID.</div>
                       </div>
                     </div>
 
                     <div class="col-md-12">
                       <label for="schoolAddress" class="form-label">School Address</label>
-                      <input type="text" class="form-control" name="schoolAddress" id="schoolAddress">
+                      <input type="text" class="form-control" name="schoolAddress"  value="<?php echo $previous_school_address; ?>"id="schoolAddress">
                       <div class="invalid-feedback">Please provide a valid School Address.</div>
                     </div>
 
                     <div class="col-md-12">
                       <label for="contactPerson" class="form-label">Contact Person Number from Previous School</label>
-                      <input type="tel" maxlength="11" class="form-control" name="contactPerson" id="contactPerson">
+                      <input type="tel" maxlength="11" class="form-control" name="contactPerson" value="<?php echo $previous_school_contact_person; ?>" id="contactPerson">
                       <div class="invalid-feedback">Please provide a valid Contact Person.</div>
                     </div>
                   </div>
@@ -439,14 +509,14 @@ if (isset($_GET['error'])) {
                 <div class="row mb-6">
                   <label for="inputNumber" class="col-sm-12 col-form-label">Parent/Guardian Signature Over Printed Name </label>
                   <div class="col-sm-6">
-                    <input class="form-control" type="file" name="parentESignature" id="formFile">
+                    <input class="form-control" type="file" name="parentESignature"  id="formFile">
                   </div>
                 </div>
 
 
                 <div class="col-md-12">
                   <label for="username" class="form-label">Username</label>
-                  <input type="text" class="form-control" name="username" id="username">
+                  <input type="text" class="form-control" name="username" value="<?php echo $username; ?>" id="username">
                   <div class="invalid-feedback">Please provide a valid Username.</div>
                 </div>
 
@@ -458,9 +528,9 @@ if (isset($_GET['error'])) {
 
 
 
-                <div class="col-12">
+                <!-- <div class="col-12">
                   <button class="btn btn-primary" type="submit">Submit form</button>
-                </div>
+                </div> -->
               </form><!-- End Custom Styled Validation -->
             </div>
           </div>

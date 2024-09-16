@@ -46,12 +46,12 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Student List</h1>
+      <h1>Instructor List</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-          <li class="breadcrumb-item">Manage Student</li>
-          <li class="breadcrumb-item active">View Student</li>
+          <li class="breadcrumb-item">Manage Instructor</li>
+          <li class="breadcrumb-item active">View Instructor</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -67,81 +67,40 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Student Name</th>
+                    <th>Instructor Name</th>
                     <th>Sex</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Parent Contact No.</th>
-                    <th>Grade level</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Contact No.</th>
+                    <th>Handle Advisory</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
-                  // Assuming you have the database connection established in a separate file (e.g., connect.php)
                   require_once 'connection/connect.php';
 
-                  // Fetch student data from the database
-                  $sql = "SELECT * 
-                FROM studentinfo"; // Adjust column names as needed
+                  // Fetch instructor data and their associated grade levels from the database
+                  $sql = "SELECT i.full_name, i.gender, i.contact_no, p.program_level
+                FROM instructorinfo i
+                LEFT JOIN programlevel p ON i.full_name = p.adviser";
                   $result = mysqli_query($conn, $sql);
 
-                  // Check if the query was successful and there are results
                   if ($result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
-                      // Construct the student's full name
-
-                      $fullName = $row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name'];
-
-                      // Fetch enrollment data for the current student using a prepared statement
-                      $sql1 = "SELECT * FROM studentsubjectenrolled WHERE student_id = ?";
-                      $stmt = mysqli_prepare($conn, $sql1);
-                      mysqli_stmt_bind_param($stmt, "i", $row['id']); // Assuming 'id' in studentinfo is an integer
-                      mysqli_stmt_execute($stmt);
-                      $result2 = mysqli_stmt_get_result($stmt);
-                      // Handle multiple enrollments for the student
-                      while ($row1 = mysqli_fetch_assoc($result2)) {
-                        $enrolled_id = $row1['enrolled_id'];
-                      }
-
                       echo "<tr>";
-                      echo "<td>" . $row['id'] . "</td>";
-                      echo "<td>" . $fullName . "</td>";
-                      echo "<td>" . $row['sex'] . "</td>";
-                      echo "<td>" . $row['age'] . "</td>";
-                      echo "<td>" . $row['address'] . "</td>";
-                      echo "<td>" . $row['cellphone_no'] . "</td>";
-                      echo "<td>" . $row['grade_level'] . "</td>";
-                      echo "<td>" . $row['status'] . "</td>";
-                      echo "<td><a href='student_info.php?id=" . $row['id'] . "' class='btn btn-primary'>View</a>
-                      
-                   
-
-                        
-                    "; ?>
-
-                      <a href='student_subjectgrade.php?program=<?php echo urlencode($row['grade_level']); ?>&student_id=<?php echo urlencode($row['id']); ?>&enrolled_id=<?php echo $enrolled_id; ?>' class='btn btn-success'>Grade</a>
-                  <?php
-                      echo "</td>";
-
+                      echo "<td>" . $row['full_name'] . "</td>";
+                      echo "<td>" . $row['gender'] . "</td>";
+                      echo "<td>" . $row['contact_no'] . "</td>";
+                      echo "<td>" . ($row['program_level'] ? $row['program_level'] : 'N/A') . "</td>"; // Display 'N/A' if no grade level is associated
                       echo "</tr>";
                     }
                   } else {
-                    // Handle the case where there are no students in the database
-                    echo "<tr><td colspan='6'>No student records found</td></tr>";
+                    echo "<tr><td colspan='4'>No instructor records found</td></tr>";
                   }
 
-                  // Close the database connection
                   mysqli_close($conn);
                   ?>
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->
-
-              <!-- <a href='student_subjectgrade.php?program=" . $row['grade_level'] . "&student_id=" . urlencode($row['student_id']) . "&enrolled_id=" . urlencode($row['enrolled_id']) .   "'> View Grade</a> -->
-
 
             </div>
           </div>

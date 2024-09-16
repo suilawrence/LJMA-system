@@ -1,3 +1,67 @@
+
+<?php
+
+require_once 'connection/connect.php';
+
+// Fetch student data from the database
+$sql = "SELECT * FROM studentinfo"; // Adjust column names as needed
+$result = mysqli_query($conn, $sql);
+
+// Get the student ID from the URL parameter
+if (isset($_GET['id'])) {
+  $studentid = $_GET['id'];
+
+  // Assuming you have the database connection established in a separate file (e.g., connect.php)
+  require_once 'connection/connect.php';
+
+  // Fetch student data from the database
+  $sql = "SELECT *
+          FROM studentinfo 
+          WHERE id = $studentid";
+  $result = mysqli_query($conn, $sql);
+
+  // Check if the query was successful and there are results
+  if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc(result: $result);
+    $subject_name = $row['subject_name'];
+  } else {
+    // Handle the case where the student record is not found
+    echo "Student record not found.";
+    exit; // Or redirect to an error page
+  }
+   // Handle the form submission (if the user has submitted the form)
+  //  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  //   $new_subjectName = $_POST['subjectName'];
+  //   $new_subjectDescription = $_POST['subjectDescription'];
+  //   $new_startTime = $_POST['startTime'];
+  //   $new_endTime = $_POST['endTime'];
+  //   $new_grade_level = $_POST['grade_level'];
+  //   $new_adviser = $_POST['adviser'];
+
+  //   // Update the program level in the database
+  //   $update_sql = "UPDATE subjectinfo SET subject_name = '$new_subjectName', description = '$new_subjectDescription', 
+  //   start_time = '$new_startTime' ,
+  //   end_time = '$new_endTime' ,
+  //   grade_level = '$new_grade_level' ,
+  //   subjectInstructor = '$new_adviser'
+  //   WHERE id = $subjectid";
+  //   if (mysqli_query($conn, $update_sql)) {
+  //     // Redirect back to the page displaying the program levels after a successful update
+  //     header("Location: subject_add.php"); // Replace with the actual page name
+  //     exit;
+  //   } else {
+  //     echo "Error updating program level: " . mysqli_error($conn);
+  //   }
+  // }
+} else {
+  // Handle the case where the 'id' parameter is missing
+  echo "Student ID not provided.";
+  exit; // Or redirect to an error page
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,47 +131,28 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Student Name</th>
-                    <th>Sex</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Parent Contact No.</th>
-                    <th>Grade level</th>
-                    <th>Status</th>
+                    <th>Subject</th>
+                    <th>First Grading</th>
+                    <th>Second Grading</th>
+                    <th>Third Grading</th>
+                    <th>Fourth Grading</th>
+                    <th>Average</th>
+                    <th>Remarks</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
                   // Assuming you have the database connection established in a separate file (e.g., connect.php)
-                  require_once 'connection/connect.php';
-
-                  // Fetch student data from the database
-                  $sql = "SELECT * 
-                FROM studentinfo"; // Adjust column names as needed
-                  $result = mysqli_query($conn, $sql);
-
+                
                   // Check if the query was successful and there are results
                   if ($result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                       // Construct the student's full name
-
                       $fullName = $row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name'];
 
-                      // Fetch enrollment data for the current student using a prepared statement
-                      $sql1 = "SELECT * FROM studentsubjectenrolled WHERE student_id = ?";
-                      $stmt = mysqli_prepare($conn, $sql1);
-                      mysqli_stmt_bind_param($stmt, "i", $row['id']); // Assuming 'id' in studentinfo is an integer
-                      mysqli_stmt_execute($stmt);
-                      $result2 = mysqli_stmt_get_result($stmt);
-                      // Handle multiple enrollments for the student
-                      while ($row1 = mysqli_fetch_assoc($result2)) {
-                        $enrolled_id = $row1['enrolled_id'];
-                      }
-
                       echo "<tr>";
-                      echo "<td>" . $row['id'] . "</td>";
                       echo "<td>" . $fullName . "</td>";
                       echo "<td>" . $row['sex'] . "</td>";
                       echo "<td>" . $row['age'] . "</td>";
@@ -116,16 +161,8 @@
                       echo "<td>" . $row['grade_level'] . "</td>";
                       echo "<td>" . $row['status'] . "</td>";
                       echo "<td><a href='student_info.php?id=" . $row['id'] . "' class='btn btn-primary'>View</a>
-                      
-                   
-
-                        
-                    "; ?>
-
-                      <a href='student_subjectgrade.php?program=<?php echo urlencode($row['grade_level']); ?>&student_id=<?php echo urlencode($row['id']); ?>&enrolled_id=<?php echo $enrolled_id; ?>' class='btn btn-success'>Grade</a>
-                  <?php
-                      echo "</td>";
-
+                        <a href='student_grade.php?id=" . $row['id'] . "' class='btn btn-success'>Grade</a>
+                      </td>";
                       echo "</tr>";
                     }
                   } else {
@@ -139,9 +176,6 @@
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->
-
-              <!-- <a href='student_subjectgrade.php?program=" . $row['grade_level'] . "&student_id=" . urlencode($row['student_id']) . "&enrolled_id=" . urlencode($row['enrolled_id']) .   "'> View Grade</a> -->
-
 
             </div>
           </div>

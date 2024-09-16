@@ -120,7 +120,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-menu-button-wide"></i><span>Manage Students</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="components-nav" class="nav-content collapse  <?php if ($current_page == 'student_add.php' || $current_page == 'student_view.php' || $current_page == 'student_grade.php' || $current_page == 'student_enroll.php' ) echo 'show'; ?> " data-bs-parent="#sidebar-nav">
+            <ul id="components-nav" class="nav-content collapse  <?php if ($current_page == 'student_add.php' || $current_page == 'student_view.php' || $current_page == 'student_grade.php' || $current_page == 'student_enrollment.php') echo 'show'; ?> " data-bs-parent="#sidebar-nav">
 
                 <li>
                     <a href="student_add.php" <?php if ($current_page == 'student_add.php') echo 'class="active"'; ?>>
@@ -132,13 +132,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="bi bi-circle"></i><span>View Students</span>
                     </a>
                 </li>
-                <li>
-                    <a href="student_grade.php" <?php if ($current_page == 'student_grade.php') echo 'class="active"'; ?>>
+                <!-- <li>
+                    <a href="student_grade.php" <php if ($current_page == 'student_grade.php') echo 'class="active"'; ?>>
                         <i class="bi bi-circle"></i><span>Students Grade</span>
                     </a>
-                </li>
+                </li> -->
                 <li>
-                    <a href="student_enroll.php" <?php if ($current_page == 'student_enroll.php') echo 'class="active"'; ?>>
+                    <a href="student_enrollment.php" <?php if ($current_page == 'student_enrollment.php') echo 'class="active"'; ?>>
                         <i class="bi bi-circle"></i><span>Enrollment</span>
                     </a>
                 </li>
@@ -146,7 +146,49 @@ $current_page = basename($_SERVER['PHP_SELF']);
             </ul>
         </li><!-- End Components Nav -->
 
+
         <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-nav2" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Manage Grade Level</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav2" class="nav-content collapse  <?php if ($current_page == 'grade_add.php' || $current_page == 'grade_update.php' || $current_page == 'subject_add.php' ) echo 'show'; ?> " data-bs-parent="#sidebar-nav">
+
+                <li>
+                    <a href="grade_add.php" <?php if ($current_page == 'grade_add.php' || $current_page == 'grade_update.php') echo 'class="active"'; ?>>
+                        <i class="bi bi-circle"></i><span>Add Grade Level</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="subject_add.php" <?php if ($current_page == 'subject_add.php') echo 'class="active"'; ?>>
+                        <i class="bi bi-circle"></i><span>Add Subject</span>
+                    </a>
+                </li>
+            </ul>
+        </li><!-- End Components Nav -->
+
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-bs-target="#components-nav3" data-bs-toggle="collapse" href="#">
+                <i class="bi bi-menu-button-wide"></i><span>Instructor</span><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="components-nav3" class="nav-content collapse  <?php if ($current_page == 'instructor_add.php' ||$current_page == 'instructor_view.php') echo 'show'; ?> " data-bs-parent="#sidebar-nav">
+
+                <li>
+                    <a href="instructor_add.php" <?php if ($current_page == 'instructor_add.php') echo 'class="active"'; ?>>
+                        <i class="bi bi-circle"></i><span>Add Instructor</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="instructor_view.php" <?php if ($current_page == 'instructor_view.php') echo 'class="active"'; ?>>
+                        <i class="bi bi-circle"></i><span>View Instructor</span>
+                    </a>
+                </li>
+
+            </ul>
+        </li><!-- End Components Nav -->
+
+        <!-- <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
                 <i class="bi bi-menu-button-wide"></i><span>Components</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
@@ -222,7 +264,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
             </ul>
-        </li><!-- End Components Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
@@ -250,7 +292,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
             </ul>
-        </li><!-- End Forms Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
@@ -268,7 +310,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
             </ul>
-        </li><!-- End Tables Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
@@ -291,7 +333,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
             </ul>
-        </li><!-- End Charts Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
@@ -314,7 +356,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
             </ul>
-        </li><!-- End Icons Nav -->
+        </li>
 
         <li class="nav-heading">Pages</li>
 
@@ -323,50 +365,49 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>
-        </li><!-- End Profile Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-faq.php">
                 <i class="bi bi-question-circle"></i>
                 <span>F.A.Q</span>
             </a>
-        </li><!-- End F.A.Q Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-contact.php">
                 <i class="bi bi-envelope"></i>
                 <span>Contact</span>
             </a>
-        </li><!-- End Contact Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-register.php">
                 <i class="bi bi-card-list"></i>
                 <span>Register</span>
             </a>
-        </li><!-- End Register Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-login.php">
                 <i class="bi bi-box-arrow-in-right"></i>
                 <span>Login</span>
             </a>
-        </li><!-- End Login Page Nav -->
-
+        </li>
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-error-404.php">
                 <i class="bi bi-dash-circle"></i>
                 <span>Error 404</span>
             </a>
-        </li><!-- End Error 404 Page Nav -->
+        </li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="pages-blank.php">
                 <i class="bi bi-file-earmark"></i>
                 <span>Blank</span>
             </a>
-        </li><!-- End Blank Page Nav -->
+        </li> -->
 
     </ul>
 
-</aside><!-- End Sidebar-->\
+</aside>

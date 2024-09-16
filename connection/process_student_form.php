@@ -2,7 +2,7 @@
 require_once 'connect.php';
 
 
-// Get form data (assuming you're using POST method)
+// Get form data (assuming you're using POST method)  grade_level
 $lrn = $_POST['lrn'];
 $last_name = $_POST['last_name'];
 $first_name = $_POST['first_name'];

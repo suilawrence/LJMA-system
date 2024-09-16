@@ -5,12 +5,12 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Tables / Data - NiceAdmin Bootstrap Template</title>
+  <title>Student List Enroll</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="img2/logoicon.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -67,15 +67,12 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Student Name</th>
-                    <th>Sex</th>
-                    <th>Age</th>
-                    <th>Address</th>
-                    <th>Parent Contact No.</th>
+
                     <th>Grade level</th>
+                    <th>Subject List</th>
+                    <th>Date Register</th>
                     <th>Status</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -84,53 +81,38 @@
                   require_once 'connection/connect.php';
 
                   // Fetch student data from the database
-                  $sql = "SELECT * 
-                FROM studentinfo"; // Adjust column names as needed
+                  $sql = "SELECT * FROM studentinfo"; // Adjust column names as needed
                   $result = mysqli_query($conn, $sql);
 
                   // Check if the query was successful and there are results
                   if ($result && mysqli_num_rows($result) > 0) {
                     while ($row = mysqli_fetch_assoc($result)) {
                       // Construct the student's full name
-
                       $fullName = $row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name'];
 
-                      // Fetch enrollment data for the current student using a prepared statement
-                      $sql1 = "SELECT * FROM studentsubjectenrolled WHERE student_id = ?";
-                      $stmt = mysqli_prepare($conn, $sql1);
-                      mysqli_stmt_bind_param($stmt, "i", $row['id']); // Assuming 'id' in studentinfo is an integer
-                      mysqli_stmt_execute($stmt);
-                      $result2 = mysqli_stmt_get_result($stmt);
-                      // Handle multiple enrollments for the student
-                      while ($row1 = mysqli_fetch_assoc($result2)) {
-                        $enrolled_id = $row1['enrolled_id'];
-                      }
-
                       echo "<tr>";
-                      echo "<td>" . $row['id'] . "</td>";
                       echo "<td>" . $fullName . "</td>";
-                      echo "<td>" . $row['sex'] . "</td>";
-                      echo "<td>" . $row['age'] . "</td>";
-                      echo "<td>" . $row['address'] . "</td>";
-                      echo "<td>" . $row['cellphone_no'] . "</td>";
                       echo "<td>" . $row['grade_level'] . "</td>";
-                      echo "<td>" . $row['status'] . "</td>";
-                      echo "<td><a href='student_info.php?id=" . $row['id'] . "' class='btn btn-primary'>View</a>
-                      
-                   
+                      echo "<td> <a href='student_enrollsubject.php?program=" . $row['grade_level'] . "&lastname=" . urlencode($row['last_name']) . "&firstname=" . urlencode($row['first_name']) . "&student_id=" . urlencode($row['id']). "&middle=" . urlencode($row['middle_name']) .  "'> View</a></td>";
+                      echo "<td>" . $row['dateRegister'] . "</td>";
 
-                        
-                    "; ?>
-
-                      <a href='student_subjectgrade.php?program=<?php echo urlencode($row['grade_level']); ?>&student_id=<?php echo urlencode($row['id']); ?>&enrolled_id=<?php echo $enrolled_id; ?>' class='btn btn-success'>Grade</a>
-                  <?php
+                      // Output the status with appropriate badge and action buttons
+                      echo "<td>";
+                      if ($row['status'] == 'Pending') {
+                        echo "<span class='badge bg-secondary'>Pending</span> ";
+                        // Add action buttons for Pending status
+                        echo "<a href='connection/approve.php?id=" . $row['id'] . "' class='btn btn-success btn-sm'>Approve</a> ";
+                        echo "<a href='connection/decline.php?id=" . $row['id'] . "' class='btn btn-danger btn-sm'>Decline</a> ";
+                      } else {
+                        echo "<span class='badge bg-success'>Success</span>";
+                      }
                       echo "</td>";
 
                       echo "</tr>";
                     }
                   } else {
                     // Handle the case where there are no students in the database
-                    echo "<tr><td colspan='6'>No student records found</td></tr>";
+                    echo "<tr><td colspan='4'>No student records found</td></tr>"; // Adjusted colspan to 4
                   }
 
                   // Close the database connection
@@ -139,9 +121,6 @@
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->
-
-              <!-- <a href='student_subjectgrade.php?program=" . $row['grade_level'] . "&student_id=" . urlencode($row['student_id']) . "&enrolled_id=" . urlencode($row['enrolled_id']) .   "'> View Grade</a> -->
-
 
             </div>
           </div>
